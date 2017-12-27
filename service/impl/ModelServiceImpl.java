@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.wb.base.dao.BaseDao;
 import com.wb.plugins.model2table.annotation.Column;
 import com.wb.plugins.model2table.annotation.Table;
+import com.wb.plugins.model2table.command.BaseDaoSupport;
 import com.wb.plugins.model2table.service.ModelService;
 
 
@@ -27,13 +28,13 @@ public class ModelServiceImpl implements ModelService {
 	private static final String KEYFIELDMAP = "keyFieldMap";
 	
 	@Resource
-	private BaseDao baseDao;
+	private BaseDaoSupport baseDaoSupport;
 	
 	private SqlSession sqlSession = null;
 	
 	private SqlSession getSqlSession() {
 		if (sqlSession == null) {
-			sqlSession = baseDao.getSession();
+			sqlSession = baseDaoSupport.getSession();
 		}
 		return sqlSession;
 	}

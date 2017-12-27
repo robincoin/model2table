@@ -3,11 +3,14 @@ package com.wb.plugins.model2table.service.impl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.Resource;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.wb.base.dao.BaseDao;
+
+import com.wb.plugins.model2table.command.BaseDaoSupport;
 import com.wb.plugins.model2table.command.Columns;
 import com.wb.plugins.model2table.service.CreateTableService;
 
@@ -21,13 +24,13 @@ import com.wb.plugins.model2table.service.CreateTableService;
 public class CreateTableServiceImpl implements CreateTableService {
 	
 	@Resource
-	private BaseDao baseDao;
+	private BaseDaoSupport baseDaoSupport;
 	
 	private SqlSession sqlSession = null;
 	
 	private SqlSession getSqlSession() {
 		if (sqlSession == null) {
-			sqlSession = baseDao.getSession();
+			sqlSession = baseDaoSupport.getSession();
 		}
 		return sqlSession;
 	}
