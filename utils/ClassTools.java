@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -48,6 +47,7 @@ public class ClassTools {
 		getPath(path, pathList);
 		// 第一个class类的集合
 		Set<Class<?>> classes = new LinkedHashSet<Class<?>>();
+		List<String> removePathList = new ArrayList<>();
 		for (String content : pathList) {
 			boolean flag = true;
 			//用于判断当前文件系统中的路径是否匹配配置文件中的路径
@@ -56,14 +56,15 @@ public class ClassTools {
 						|| (i > 0 && content.indexOf(subPack[i]) < content.indexOf(subPack[i-1]))
 						|| (!content.endsWith(subPack[subPack.length - 1]) && !subPack[subPack.length - 1].endsWith("\\"))) {
 					flag = false;
-					pathList.remove(content);
+					removePathList.add(content);
+					//pathList.remove(content);//遍历集合的时候不应该对集合进行删除
 					break;
 				}
 			}
 			if (flag) {
 				// 获取此包的目录 建立一个File
 				File dir = new File(content);
-				// 如果存在 就获取包下的所有文件 包括目录
+				// 如果存在 就获取包下的所有文件
 				File[] dirfiles = dir.listFiles(new FileFilter() {
 					// 自定义过滤规则 如果可以循环(包含子目录) 或则是以.class结尾的文件(编译好的java类文件)
 					public boolean accept(File file) {
@@ -92,6 +93,7 @@ public class ClassTools {
 				}
 			}
 		}
+		pathList.removeAll(removePathList);
 		ConfigLoder.setModelPack(pathList);//把model的路径放到配置类中，用于加载用来初始化数据的类；放到ConfigLoder的目的只是为了方便传参而已
 		return classes;
 	}
